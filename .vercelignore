@@ -1,0 +1,15 @@
+# Never upload local secrets or private data to Vercel (CLI deploys).
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/.next
+**/.venv
+**/venv
+**/__pycache__
+worker/
+supabase/
+.github/
