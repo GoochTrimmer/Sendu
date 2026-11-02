@@ -1,0 +1,75 @@
+# Brand families used by the spam filter (README 4.5 step 5).
+# One family per line; aliases separated by '|'. A listing that mentions
+# SPAM_BRAND_THRESHOLD (default 3) or more DIFFERENT families in its title +
+# description is treated as keyword-stuffed spam.
+# Sub-lines of one house are grouped on one line so a genuine
+# "Yohji Yamamoto Pour Homme / Y's" listing counts as one brand, not three.
+
+yohji yamamoto|yohji|ヨウジヤマモト|ys|ワイズ|y-3|ground y|s'yte|regulation yohji
+comme des garcons|comme des garçons|cdg|コムデギャルソン|homme plus|play cdg
+junya watanabe|junya|ジュンヤワタナベ
+issey miyake|issey|イッセイミヤケ|homme plisse|pleats please|me issey miyake
+undercover|アンダーカバー|jun takahashi
+number (n)ine|number nine|ナンバーナイン|takahiro miyashita|the soloist
+kapital|キャピタル
+visvim|ビズビム
+neighborhood|ネイバーフッド
+wtaps|ダブルタップス
+sacai|サカイ
+kolor
+needles|ニードルス
+auralee|オーラリー
+hysteric glamour|ヒステリックグラマー
+kiko kostadinov
+craig green
+rick owens|リックオウエンス|drkshdw
+maison margiela|margiela|martin margiela|マルジェラ|mm6
+raf simons|ラフシモンズ
+helmut lang|ヘルムートラング
+ann demeulemeester|アンドゥムルメステール
+dries van noten|ドリスヴァンノッテン
+jil sander|ジルサンダー
+prada|プラダ
+miu miu
+gucci|グッチ
+louis vuitton|ルイヴィトン
+chanel|シャネル
+hermes|hermès|エルメス
+dior|ディオール|dior homme
+saint laurent|yves saint laurent|ysl|サンローラン
+balenciaga|バレンシアガ
+bottega veneta
+celine|céline|セリーヌ
+loewe|ロエベ
+givenchy|ジバンシー
+valentino
+versace
+fendi|フェンディ
+burberry|バーバリー
+alexander mcqueen|mcqueen
+vivienne westwood|ヴィヴィアンウエストウッド
+jean paul gaultier|gaultier|ゴルチエ
+moncler|モンクレール
+stone island|ストーンアイランド
+cp company|c.p. company
+acne studios
+our legacy
+lemaire|ルメール
+the row
+carol christian poell|ccp
+boris bidjan saberi|bbs
+guidi
+julius|ユリウス
+a.p.c.|apc
+supreme|シュプリーム
+bape|a bathing ape|アベイシングエイプ
+stussy|ステューシー
+off-white|off white
+fear of god
+chrome hearts|クロムハーツ
+arc'teryx|arcteryx|アークテリクス
+the north face|north face|ノースフェイス
+patagonia|パタゴニア
+nike|ナイキ
+adidas|アディダス
+new balance|ニューバランス

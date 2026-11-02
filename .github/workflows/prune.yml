@@ -1,0 +1,25 @@
+name: prune
+on:
+  schedule:
+    - cron: "17 19 * * *" # daily, 03:17 Singapore time
+  workflow_dispatch: {}
+concurrency:
+  group: poll # don't prune while a poll is writing
+  cancel-in-progress: false
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults: { run: { working-directory: worker } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: worker/pyproject.toml
+      - run: pip install -e .
+      - run: python -m sourcer prune
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

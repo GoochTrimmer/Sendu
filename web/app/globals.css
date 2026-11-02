@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --surface-2: #efede8;
+  --border: #e2dfd8;
+  --text: #1b1a17;
+  --muted: #6b675e;
+  --accent: #1b1a17;
+  --accent-text: #ffffff;
+  --like: #c2410c;
+  --good: #15803d;
+  --warn-bg: #fef3c7;
+  --warn-text: #78350f;
+  --danger: #b91c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f0e;
+    --surface: #1a1918;
+    --surface-2: #252422;
+    --border: #2f2d2a;
+    --text: #ecebe8;
+    --muted: #9b978e;
+    --accent: #ecebe8;
+    --accent-text: #0f0f0e;
+    --like: #fb923c;
+    --good: #4ade80;
+    --warn-bg: #3b2a06;
+    --warn-text: #fcd34d;
+    --danger: #f87171;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-like: var(--like);
+  --color-good: var(--good);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-text: var(--warn-text);
+  --color-danger: var(--danger);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text transition-colors hover:bg-surface-2 disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn border-accent bg-accent text-accent-text hover:bg-accent hover:opacity-90;
+}
+@utility btn-sm {
+  @apply px-2 py-1 text-xs;
+}
+@utility input {
+  @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text placeholder:text-muted focus:outline-2 focus:outline-offset-1 focus:outline-accent;
+}
+@utility label {
+  @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-muted;
+}
+@utility card {
+  @apply rounded-xl border border-border bg-surface;
+}
+@utility chip {
+  @apply inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-muted;
+}

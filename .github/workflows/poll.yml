@@ -1,0 +1,38 @@
+name: poll
+on:
+  schedule:
+    # Public repo: every 30 min. For a private repo use "0 * * * *" and --max-runtime 90 (README 7.1).
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      max_runtime:
+        description: "Seconds before the run stops cleanly"
+        default: "150"
+concurrency:
+  group: poll
+  cancel-in-progress: false # never run two pollers at once
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults: { run: { working-directory: worker } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: worker/pyproject.toml
+      - run: pip install -e .
+      - run: python -m sourcer run --max-runtime ${{ inputs.max_runtime || '150' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ADMIN_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID }}
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          EBAY_MARKETPLACE_ID: ${{ vars.EBAY_MARKETPLACE_ID || 'EBAY_US' }}
+          GRAILED_ALGOLIA_APP_ID: ${{ secrets.GRAILED_ALGOLIA_APP_ID }}
+          GRAILED_ALGOLIA_API_KEY: ${{ secrets.GRAILED_ALGOLIA_API_KEY }}
+          GRAILED_ALGOLIA_INDEX: ${{ secrets.GRAILED_ALGOLIA_INDEX }}

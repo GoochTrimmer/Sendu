@@ -1,0 +1,64 @@
+{
+  "_note": "Shape VERIFIED against the live API on 2026-11-02 (values invented). Replace with a real capture: python -m sourcer probe mercari_jp \"ヨウジヤマモト\" --save",
+  "meta": {"nextPageToken": "v1:1", "previousPageToken": "", "numFound": "4188", "properties": []},
+  "items": [
+    {
+      "id": "m41118737938",
+      "sellerId": "908278711",
+      "buyerId": "",
+      "status": "ITEM_STATUS_ON_SALE",
+      "name": "Yohji Yamamotoボタンデザイン ロングタイトスカート",
+      "price": "19800",
+      "created": "1765457837",
+      "updated": "1793606079",
+      "thumbnails": ["https://static.mercdn.net/thumb/item/webp/m41118737938_1.jpg?1765468962"],
+      "photos": [
+        {"uri": "https://static.mercdn.net/item/detail/webp/photos/m41118737938_1.jpg?1765468962"},
+        {"uri": "https://static.mercdn.net/item/detail/webp/photos/m41118737938_2.jpg?1765468962"}
+      ],
+      "itemType": "ITEM_TYPE_MERCARI",
+      "itemBrand": {"id": "1253", "name": "Yohji Yamamoto", "subName": "Yohji Yamamoto"},
+      "itemSize": {"id": "2", "name": "S"},
+      "itemSizes": [{"id": "2", "name": "S"}],
+      "shopName": "",
+      "auction": null
+    },
+    {
+      "id": "Ab3dEfGhIjKlMnOpQrStUv",
+      "sellerId": "0",
+      "status": "ITEM_STATUS_ON_SALE",
+      "name": "Y's ワイズ ロングスカート",
+      "price": "15800",
+      "created": "1793605000",
+      "updated": "1793605000",
+      "thumbnails": ["https://assets.mercari-shops-static.com/xxx.jpg"],
+      "photos": [],
+      "itemType": "ITEM_TYPE_BEYOND",
+      "itemSizes": [],
+      "shopName": "",
+      "shop": {"id": "shop123"},
+      "auction": null
+    },
+    {
+      "id": "m54865656762",
+      "sellerId": "999",
+      "status": "ITEM_STATUS_ON_SALE",
+      "name": "ヨウジ　ｙ’ｓ　シャツ",
+      "price": "14999",
+      "created": "1793604000",
+      "updated": "1793604000",
+      "thumbnails": ["https://static.mercdn.net/thumb/item/webp/m54865656762_1.jpg"],
+      "itemType": "ITEM_TYPE_MERCARI",
+      "auction": {"bidDeadline": "2026-11-03T11:54:49Z", "highestBid": "14999", "id": "", "initialPrice": "14999", "totalBid": "0"}
+    },
+    {
+      "id": "m81234567891",
+      "sellerId": "999",
+      "status": "ITEM_STATUS_SOLD_OUT",
+      "name": "sold one",
+      "price": "9000",
+      "created": "1793600000",
+      "thumbnails": []
+    }
+  ]
+}

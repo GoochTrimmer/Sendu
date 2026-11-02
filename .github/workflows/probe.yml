@@ -1,0 +1,32 @@
+# Manual check that a marketplace answers from a GitHub runner (README 6.3:
+# "Test Mercari JP from a GitHub Actions runner early"). Makes ONE request.
+name: probe
+on:
+  workflow_dispatch:
+    inputs:
+      marketplace:
+        type: choice
+        options: [mercari_jp, yahoo_auctions, grailed, ebay]
+        default: mercari_jp
+      query:
+        default: "ヨウジヤマモト"
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    defaults: { run: { working-directory: worker } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: worker/pyproject.toml
+      - run: pip install -e .
+      - run: python -m sourcer probe "${{ inputs.marketplace }}" "${{ inputs.query }}"
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          GRAILED_ALGOLIA_APP_ID: ${{ secrets.GRAILED_ALGOLIA_APP_ID }}
+          GRAILED_ALGOLIA_API_KEY: ${{ secrets.GRAILED_ALGOLIA_API_KEY }}
+          GRAILED_ALGOLIA_INDEX: ${{ secrets.GRAILED_ALGOLIA_INDEX }}

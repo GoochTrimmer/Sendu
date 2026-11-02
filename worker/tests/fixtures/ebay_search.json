@@ -1,0 +1,40 @@
+{
+  "_note": "SYNTHETIC fixture built from eBay's documented Browse API item_summary/search schema. Replace with a real capture: python -m sourcer probe ebay \"yohji yamamoto\" --save",
+  "href": "https://api.ebay.com/buy/browse/v1/item_summary/search?q=yohji&sort=newlyListed&limit=50&offset=0",
+  "total": 1234,
+  "next": "https://api.ebay.com/buy/browse/v1/item_summary/search?q=yohji&sort=newlyListed&limit=50&offset=50",
+  "limit": 50,
+  "offset": 0,
+  "itemSummaries": [
+    {
+      "itemId": "v1|186543210001|0",
+      "title": "Yohji Yamamoto Pour Homme 2003AW Wool Gabardine Coat Size 3",
+      "price": {"value": "640.00", "currency": "USD"},
+      "image": {"imageUrl": "https://i.ebayimg.com/images/g/aaa/s-l1600.jpg"},
+      "additionalImages": [
+        {"imageUrl": "https://i.ebayimg.com/images/g/bbb/s-l1600.jpg"},
+        {"imageUrl": "https://i.ebayimg.com/images/g/ccc/s-l1600.jpg"},
+        {"imageUrl": "https://i.ebayimg.com/images/g/ddd/s-l1600.jpg"},
+        {"imageUrl": "https://i.ebayimg.com/images/g/eee/s-l1600.jpg"}
+      ],
+      "seller": {"username": "tokyo_archive_store", "feedbackPercentage": "99.8", "feedbackScore": 2210},
+      "condition": "Pre-owned",
+      "itemWebUrl": "https://www.ebay.com/itm/186543210001",
+      "itemCreationDate": "2026-11-01T09:15:22.000Z"
+    },
+    {
+      "itemId": "v1|186543210002|0",
+      "title": "Y's Yohji Yamamoto linen wide pants",
+      "price": {"value": "120.00", "currency": "USD"},
+      "image": {"imageUrl": "https://i.ebayimg.com/images/g/fff/s-l1600.jpg"},
+      "seller": {"username": "vintage_osaka"},
+      "itemWebUrl": "https://www.ebay.com/itm/186543210002",
+      "itemCreationDate": "2026-11-01T08:02:10.000Z"
+    },
+    {
+      "itemId": "v1|186543210003|0",
+      "title": "Missing URL item should be skipped",
+      "price": {"value": "1.00", "currency": "USD"}
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# secrets
+.env
+.env.*
+!.env.example
+# python
+worker/.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+# node (web/ has its own .gitignore too)
+node_modules/
+.next/
+# real marketplace captures (real listings / seller ids): keep local, never publish
+worker/tests/fixtures/*_real.json

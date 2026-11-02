@@ -1,0 +1,32 @@
+{
+  "_note": "Shape VERIFIED against the live search page __NEXT_DATA__ on 2026-11-02 (values invented). Replace with a real capture: python -m sourcer probe yahoo_auctions \"ヨウジヤマモト\" --save",
+  "props": {"pageProps": {"initialState": {"search": {"items": {"listing": {
+    "isFetching": false,
+    "totalResultsAvailable": 17476,
+    "metadata": {"limit": 50, "sort": "-FIRST_START_TIME", "exceptSuspectedFake": true},
+    "items": [
+      {
+        "auctionId": "p1250735387", "title": "美品 Yohji Yamamoto 23aw フーディー パーカー M 黒",
+        "price": 21000, "buyNowPrice": 21100, "bidCount": 0, "isFixedPrice": false,
+        "startTime": "2026-11-02T19:49:45+09:00", "endTime": "2026-11-04T21:26:36+09:00",
+        "imageUrl": "https://auc-pctr.c.yimg.jp/i/auctions.c.yimg.jp/images/aaa.jpg?pri=l",
+        "itemCondition": "USED20", "isFeatured": false, "isShoppingItem": true,
+        "seller": {"userId": "D4Exxxxxxxxxxxxxxxxxxxxxxxxxx", "displayName": "********", "isStore": true, "type": "AUC_STORE"}
+      },
+      {
+        "auctionId": "x9999999999", "title": "PROMOTED out-of-order item",
+        "price": 5000, "buyNowPrice": 5000, "isFixedPrice": true,
+        "startTime": "2026-11-02T18:25:22+09:00", "isFeatured": true,
+        "seller": {"userId": "ZZZzzzzzzzzzzzzzzzzzzzzzzzzzz", "displayName": "********"}
+      },
+      {
+        "auctionId": "x1250732563", "title": "YOHJIYAMAMOTO+NOIR テーラードジャケット/M/ウール/BLK",
+        "price": 0, "buyNowPrice": 14960, "bidCount": 0, "isFixedPrice": true,
+        "startTime": "2026-11-02T19:47:40+09:00", "endTime": "2026-11-10T02:48:22+09:00",
+        "imageUrl": "https://auc-pctr.c.yimg.jp/i/auctions.c.yimg.jp/images/bbb.jpg?pri=l",
+        "isFeatured": false,
+        "seller": {"userId": "Q7Kxxxxxxxxxxxxxxxxxxxxxxxxxx", "displayName": "vintage_shop", "isStore": false}
+      }
+    ]
+  }}}}}}
+}
