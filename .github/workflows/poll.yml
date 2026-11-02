@@ -1,8 +1,8 @@
 name: poll
 on:
   schedule:
-    # Public repo: every 30 min. For a private repo use "0 * * * *" and --max-runtime 90 (README 7.1).
-    - cron: "*/30 * * * *"
+    # Public repo: every 30 min. For a private repo use "7 * * * *" and --max-runtime 90 (README 7.1).
+    - cron: "7,37 * * * *" # off the :00/:30 peak, when GitHub drops scheduled runs
   workflow_dispatch:
     inputs:
       max_runtime:
