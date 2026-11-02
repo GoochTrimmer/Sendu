@@ -11,6 +11,11 @@ from datetime import datetime, timedelta
 
 from .models import Listing, MarketplaceStatus, SavedSearch, SearchState, SeenRow
 
+# A pair is due once this fraction of its target interval has passed. Cron fires
+# on a fixed grid (every 30 min) but last_polled_at is stamped seconds-to-minutes
+# into a run, so a strict ratio of 1 would skip every other tick.
+DUE_RATIO = 0.8
+
 
 @dataclass
 class Pair:
@@ -55,7 +60,7 @@ def build_queues(
 ) -> dict[str, list[Pair]]:
     """One queue per available marketplace, most overdue first.
 
-    Pairs with overdue_ratio < 1 are skipped (unless `force`, used by --only-search
+    Pairs with overdue_ratio < DUE_RATIO are skipped (unless `force`, used by --only-search
     and dry runs). Never-polled pairs have an infinite ratio so they run first.
     """
     queues: dict[str, list[Pair]] = {}
@@ -69,7 +74,7 @@ def build_queues(
                 continue
             state = states.get((s.id, mp)) or SearchState(search_id=s.id, marketplace=mp)
             ratio = overdue_ratio(state.last_polled_at, s.priority, now, intervals)
-            if ratio < 1 and not force:
+            if ratio < DUE_RATIO and not force:
                 continue
             queues.setdefault(mp, []).append(Pair(s, mp, state, ratio))
     for q in queues.values():

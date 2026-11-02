@@ -35,6 +35,17 @@ def test_queue_orders_by_overdue_and_skips_not_due():
     assert q["ebay"][0].is_first_run
 
 
+def test_urgent_search_runs_on_every_half_hour_tick():
+    # Previous tick stamped last_polled_at 51 s after :30; the :00 tick must still run it.
+    s = mk_search(id="a", priority="urgent", marketplaces=["grailed"])
+    st = {("a", "grailed"): SearchState(search_id="a", marketplace="grailed", initialized=True,
+                                        last_polled_at=NOW - timedelta(minutes=29, seconds=9))}
+    assert [p.search.id for p in build_queues([s], st, MPS, NOW, TARGET_INTERVALS)["grailed"]] == ["a"]
+    # ...but a run only 15 minutes later (e.g. a manual trigger) does not re-poll.
+    st[("a", "grailed")].last_polled_at = NOW - timedelta(minutes=15)
+    assert build_queues([s], st, MPS, NOW, TARGET_INTERVALS) == {}
+
+
 def test_queue_skips_paused_marketplace_and_paused_search():
     mps = {**MPS, "ebay": MarketplaceStatus(code="ebay", name="eBay", paused_until=NOW + timedelta(hours=1))}
     s = mk_search(id="a", marketplaces=["grailed", "ebay"])
