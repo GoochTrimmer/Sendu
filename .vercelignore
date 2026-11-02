@@ -10,6 +10,6 @@
 **/.venv
 **/venv
 **/__pycache__
-worker/
-supabase/
-.github/
+/worker/
+/supabase/
+/.github/

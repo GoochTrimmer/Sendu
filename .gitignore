@@ -13,3 +13,4 @@ node_modules/
 .next/
 # real marketplace captures (real listings / seller ids): keep local, never publish
 worker/tests/fixtures/*_real.json
+.vercel
