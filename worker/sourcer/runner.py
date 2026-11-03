@@ -14,6 +14,7 @@ import httpx
 
 from .adapters import AdapterNotConfigured, MarketplaceAdapter
 from .config import Settings
+from .fx import refresh_rates
 from .matching import Blocklist, Matcher, load_brands, new_stats
 from .models import Listing, MarketplaceStatus, SeenRow
 from .notify import Telegram, link_telegram_accounts, send_pending
@@ -328,6 +329,10 @@ async def run(
         own_client = http_client is None
         client = http_client or httpx.AsyncClient(timeout=20, follow_redirects=False)
         try:
+            try:
+                await refresh_rates(store, client, now)
+            except Exception:
+                log.exception("fx rates unavailable; using fixed fallback rates")
             results = await asyncio.gather(
                 *(run_marketplace(ctx, mp, q, client, budget) for mp, q in queues.items()),
                 return_exceptions=True,

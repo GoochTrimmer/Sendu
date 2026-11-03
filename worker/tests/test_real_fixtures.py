@@ -8,6 +8,7 @@ Skipped for marketplaces without a capture.
 import pytest
 from conftest import FIXTURES, load_fixture
 
+from sourcer.adapters.carousell import COUNTRIES, CarousellAdapter
 from sourcer.adapters.ebay import EbayAdapter
 from sourcer.adapters.grailed import GrailedAdapter
 from sourcer.adapters.mercari_jp import MercariJPAdapter
@@ -18,6 +19,7 @@ PARSERS = {
     "grailed": GrailedAdapter.parse,
     "mercari_jp": MercariJPAdapter.parse,
     "yahoo_auctions": YahooAuctionsAdapter.parse,
+    **{code: CarousellAdapter(code).parse for code in COUNTRIES},
 }
 
 

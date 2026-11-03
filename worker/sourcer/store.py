@@ -15,6 +15,7 @@ from typing import Any
 
 import httpx
 
+from .adapters import ALL_CODES as ALL_MARKETPLACE_CODES
 from .models import (
     BlockedSeller,
     Listing,
@@ -230,6 +231,20 @@ class SupabaseStore:
         await self._patch("worker_heartbeat", {"id": "eq.1"}, fields)
 
     # -- notifications -----------------------------------------------------
+    async def load_fx_rates(self) -> dict[str, tuple[Decimal, datetime]]:
+        rows = await self._get("fx_rates", {"select": "currency,rate_to_sgd,updated_at"})
+        return {
+            r["currency"]: (Decimal(str(r["rate_to_sgd"])), datetime.fromisoformat(r["updated_at"]))
+            for r in rows
+        }
+
+    async def save_fx_rates(self, rates: dict[str, Decimal], at: datetime) -> None:
+        rows = [{"currency": c, "rate_to_sgd": r, "updated_at": at} for c, r in rates.items()]
+        await self._post(
+            "fx_rates", rows, "resolution=merge-duplicates,return=minimal",
+            params={"on_conflict": "currency"},
+        )
+
     async def pending_matches(self) -> list[PendingMatch]:
         rows = await self._get(
             "matches",
@@ -291,7 +306,7 @@ class MemoryStore:
         self.states: dict[tuple[str, str], SearchState] = {}
         self.state_fields: dict[tuple[str, str], dict[str, Any]] = {}
         self.marketplaces = marketplaces or {
-            c: MarketplaceStatus(code=c, name=c) for c in ("ebay", "grailed", "mercari_jp", "yahoo_auctions")
+            c: MarketplaceStatus(code=c, name=c) for c in ALL_MARKETPLACE_CODES
         }
         self.blocklist = blocklist or []
         self.profiles = profiles or {}
@@ -300,6 +315,7 @@ class MemoryStore:
         self.matches: list[dict[str, Any]] = []
         self.price_history: list[dict[str, Any]] = []
         self.heartbeat: dict[str, Any] = {}
+        self.fx_rates: dict[str, tuple[Decimal, datetime]] = {}
         self.marketplace_updates: dict[str, dict[str, Any]] = {}
         self._next_id = 0
 
@@ -384,6 +400,12 @@ class MemoryStore:
     async def update_heartbeat(self, fields: dict[str, Any]) -> None:
         self.heartbeat.update(fields)
 
+    async def load_fx_rates(self) -> dict[str, tuple[Decimal, datetime]]:
+        return dict(self.fx_rates)
+
+    async def save_fx_rates(self, rates: dict[str, Decimal], at: datetime) -> None:
+        self.fx_rates.update({c: (r, at) for c, r in rates.items()})
+
     async def pending_matches(self) -> list[PendingMatch]:
         by_id = {row["id"]: row for row in self.listings.values()}
         titles = {s.id: s.title for s in self.searches}
@@ -436,6 +458,9 @@ class DryRunStore(MemoryStore):
 
     async def load_blocklist(self) -> list[BlockedSeller]:
         return await self.base.load_blocklist()
+
+    async def load_fx_rates(self) -> dict[str, tuple[Decimal, datetime]]:
+        return {**await self.base.load_fx_rates(), **self.fx_rates}
 
     async def get_seen(self, marketplace: str, ids: list[str]) -> dict[str, SeenRow]:
         real = await self.base.get_seen(marketplace, ids)

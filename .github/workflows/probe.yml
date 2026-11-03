@@ -6,7 +6,7 @@ on:
     inputs:
       marketplace:
         type: choice
-        options: [mercari_jp, yahoo_auctions, grailed, ebay]
+        options: [mercari_jp, yahoo_auctions, carousell_ph, carousell_my, carousell_id, carousell_sg, carousell_hk, grailed, ebay]
         default: mercari_jp
       query:
         default: "ヨウジヤマモト"

@@ -1,0 +1,172 @@
+{
+  "SearchListing": {
+    "listingCards": [
+      {
+        "id": "1471993317",
+        "listingID": 1471993317,
+        "title": "Yohji Yamamoto Y'saccs pour Homme nylon backpack in black ysaccs",
+        "price": "PHP 1,280",
+        "aboveFold": [
+          {
+            "component": "time_created",
+            "timestampContent": {
+              "seconds": {
+                "low": 1793702920,
+                "high": 0,
+                "unsigned": false
+              }
+            }
+          }
+        ],
+        "belowFold": [
+          {
+            "component": "header_1",
+            "stringContent": "Yohji Yamamoto Y'saccs pour Homme nylon backpack in black ysaccs"
+          },
+          {
+            "component": "header_2",
+            "stringContent": "PHP 1,280"
+          }
+        ],
+        "condition": 4,
+        "status": "L",
+        "likesCount": 1,
+        "auction": null,
+        "countryCollectionId": "2521",
+        "seller": {
+          "id": "25493233",
+          "username": "nextflip",
+          "firstName": "",
+          "sellerType": "Professional Seller"
+        },
+        "media": [
+          {
+            "photoItem": {
+              "url": "https://media.karousell.com/media/photos/products/2026/11/3/p1471993317_0.jpg",
+              "width": 320,
+              "height": 320
+            }
+          },
+          {
+            "photoItem": {
+              "url": "https://media.karousell.com/media/photos/products/2026/11/3/p1471993317_1.jpg",
+              "width": 320,
+              "height": 320
+            }
+          }
+        ],
+        "thumbnailURL": "https://media.karousell.com/media/photos/products/2026/11/3/p1471993317_thumbnail.jpg"
+      },
+      {
+        "id": "0",
+        "listingID": 0,
+        "title": "spx_bp_delivery",
+        "price": "",
+        "aboveFold": [],
+        "belowFold": [],
+        "media": [],
+        "seller": {}
+      },
+      {
+        "id": "1380444751",
+        "listingID": 1380444751,
+        "title": "Y's Yohji Yamamoto wool coat",
+        "price": "PHP 3,000",
+        "aboveFold": [
+          {
+            "component": "active_bump",
+            "timestampContent": {
+              "seconds": {
+                "low": 1793694132,
+                "high": 0,
+                "unsigned": false
+              }
+            }
+          }
+        ],
+        "belowFold": [
+          {
+            "component": "header_1",
+            "stringContent": "Y's Yohji Yamamoto wool coat"
+          },
+          {
+            "component": "header_2",
+            "stringContent": "PHP 3,000"
+          }
+        ],
+        "condition": 4,
+        "status": "L",
+        "likesCount": 1,
+        "auction": null,
+        "countryCollectionId": "2521",
+        "seller": {
+          "id": "777",
+          "username": "coatguy",
+          "firstName": "",
+          "sellerType": null
+        },
+        "media": [
+          {
+            "photoItem": {
+              "url": "https://media.karousell.com/media/photos/products/2026/11/3/p1380444751_0.jpg",
+              "width": 320,
+              "height": 320
+            }
+          },
+          {
+            "photoItem": {
+              "url": "https://media.karousell.com/media/photos/products/2026/11/3/p1380444751_1.jpg",
+              "width": 320,
+              "height": 320
+            }
+          }
+        ],
+        "thumbnailURL": "https://media.karousell.com/media/photos/products/2026/11/3/p1380444751_thumbnail.jpg",
+        "originalPrice": {
+          "value": "PHP 3,500"
+        }
+      },
+      {
+        "id": "1468672573",
+        "listingID": 1468672573,
+        "title": "ADIDAS X YOHJI YAMAMOTO",
+        "price": "PHP 450.50",
+        "aboveFold": [
+          {
+            "component": "expired_bump",
+            "timestampContent": {
+              "seconds": {
+                "low": 1793552864,
+                "high": 0,
+                "unsigned": false
+              }
+            }
+          }
+        ],
+        "belowFold": [
+          {
+            "component": "header_1",
+            "stringContent": "ADIDAS X YOHJI YAMAMOTO"
+          },
+          {
+            "component": "header_2",
+            "stringContent": "PHP 450.50"
+          }
+        ],
+        "condition": 4,
+        "status": "L",
+        "likesCount": 1,
+        "auction": null,
+        "countryCollectionId": "2521",
+        "seller": {
+          "id": "888",
+          "username": "sneakerhub",
+          "firstName": "",
+          "sellerType": null
+        },
+        "media": [],
+        "thumbnailURL": "https://media.karousell.com/media/photos/products/2026/11/3/p1468672573_thumbnail.jpg"
+      }
+    ]
+  }
+}

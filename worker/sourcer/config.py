@@ -22,9 +22,13 @@ TARGET_INTERVALS: dict[str, timedelta] = {
     "daily": timedelta(hours=24),
 }
 
-# Fixed FX table for Phase 1: how many SGD one unit of each currency is worth.
-# Rough values; only used for min/max price filters.
+# Fallback FX table: how many SGD one unit of each currency is worth. Live daily rates
+# (sourcer.fx, stored in the fx_rates table) override these at the start of each run;
+# these rough values are only used if no live rate has ever been fetched.
 FX_TO_SGD: dict[str, Decimal] = {
+    "PHP": Decimal("0.0202"),
+    "MYR": Decimal("0.314"),
+    "IDR": Decimal("0.0000706"),
     "SGD": Decimal("1"),
     "USD": Decimal("1.30"),
     "EUR": Decimal("1.45"),
@@ -43,11 +47,25 @@ BROWSER_USER_AGENT = (
 )
 
 
+_live_rates: dict[str, Decimal] = {}
+
+
+def set_live_rates(rates: dict[str, Decimal]) -> None:
+    """Install live rates (SGD per unit); currencies they lack fall back to FX_TO_SGD."""
+    _live_rates.clear()
+    _live_rates.update({k.upper(): v for k, v in rates.items() if v and v > 0})
+
+
+def rate_to_sgd(currency: str) -> Decimal | None:
+    cur = currency.upper()
+    return _live_rates.get(cur) or FX_TO_SGD.get(cur)
+
+
 def convert(amount: Decimal | None, from_cur: str | None, to_cur: str) -> Decimal | None:
-    """Convert using the fixed table. Returns None if either currency is unknown."""
+    """Convert via SGD using live rates (fixed fallback). None if a currency is unknown."""
     if amount is None or not from_cur:
         return None
-    src, dst = FX_TO_SGD.get(from_cur.upper()), FX_TO_SGD.get(to_cur.upper())
+    src, dst = rate_to_sgd(from_cur), rate_to_sgd(to_cur)
     if src is None or dst is None:
         return None
     return amount * src / dst

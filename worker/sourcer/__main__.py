@@ -126,7 +126,10 @@ async def cmd_probe(args: argparse.Namespace, settings: Settings) -> int:
     for x in page.listings[:10]:
         print(f"  {x.listed_at}  {x.price} {x.currency}  seller={x.seller_id}  {x.title[:60]!r}")
     payload = raw.get("body")
-    if payload is None and "text" in raw and hasattr(adapter, "parse_html"):
+    if payload is None and "text" in raw and hasattr(adapter, "fixture_payload"):
+        # HTML page (Carousell): keep only the results block as the fixture.
+        payload = adapter.fixture_payload(str(raw["text"]))
+    elif payload is None and "text" in raw and hasattr(adapter, "parse_html"):
         # HTML page (Yahoo): keep only the results block of __NEXT_DATA__ as the fixture.
         from .adapters.yahoo_auctions import _listing_block, extract_next_data
 
@@ -163,6 +166,8 @@ async def cmd_status(_: argparse.Namespace, settings: Settings) -> int:
     print(f"Marketplaces: {', '.join(m['code'] + ('' if m['enabled'] else ' (disabled)') for m in mps)}")
     if "yahoo_auctions" not in {m["code"] for m in mps}:
         print("  !! yahoo_auctions missing: run supabase/migrations/0002_yahoo_auctions.sql")
+    if "carousell_ph" not in {m["code"] for m in mps}:
+        print("  !! carousell_* missing: run supabase/migrations/0006_carousell_fx.sql")
     print(f"\nUsers: {len(profiles)}")
     for p in profiles:
         tg = "Telegram linked" if p["telegram_chat_id"] else "Telegram NOT linked"

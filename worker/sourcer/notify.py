@@ -8,11 +8,12 @@ import logging
 import re
 from collections import defaultdict
 from datetime import UTC, datetime
+from decimal import Decimal
 from typing import Any
 
 import httpx
 
-from .config import Settings
+from .config import Settings, convert
 from .models import Listing, PendingMatch, Profile
 
 log = logging.getLogger(__name__)
@@ -22,15 +23,34 @@ MARKETPLACE_NAMES = {
     "grailed": "Grailed",
     "mercari_jp": "Mercari JP",
     "yahoo_auctions": "Yahoo! Auctions",
+    "carousell_ph": "Carousell PH",
+    "carousell_my": "Carousell MY",
+    "carousell_id": "Carousell ID",
+    "carousell_sg": "Carousell SG",
+    "carousell_hk": "Carousell HK",
 }
 START_RE = re.compile(r"^/start(?:@\w+)?\s+([A-Za-z0-9_-]{4,64})\s*$")
 
 
+NO_DECIMALS = {"JPY", "KRW", "IDR", "PHP"}
+
+
+def _amount(value: Decimal, currency: str | None) -> str:
+    if currency in NO_DECIMALS or value == value.to_integral_value():
+        return f"{value:,.0f}"
+    return f"{value:,.2f}"
+
+
 def format_price(listing: Listing) -> str:
+    """Local price, plus the live-rate SGD equivalent: '1,280 PHP (≈ S$25.84)'."""
     if listing.price is None:
         return "price n/a"
-    amount = f"{listing.price:,.0f}" if listing.currency == "JPY" else f"{listing.price:,.2f}"
-    return f"{amount} {listing.currency or ''}".strip()
+    local = f"{_amount(listing.price, listing.currency)} {listing.currency or ''}".strip()
+    if listing.currency and listing.currency.upper() != "SGD":
+        sgd = convert(listing.price, listing.currency, "SGD")
+        if sgd is not None:
+            return f"{local} (≈ S${sgd:,.2f})"
+    return local
 
 
 def caption(m: PendingMatch) -> str:

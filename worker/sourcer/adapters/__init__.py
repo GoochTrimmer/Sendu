@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from ..config import Settings
 from .base import AdapterNotConfigured, MarketplaceAdapter
+from .carousell import COUNTRIES as CAROUSELL_COUNTRIES
+from .carousell import CarousellAdapter
 from .ebay import EbayAdapter
 from .grailed import GrailedAdapter
 from .mercari_jp import MercariJPAdapter
 from .yahoo_auctions import YahooAuctionsAdapter
 
-ALL_CODES = ("ebay", "grailed", "mercari_jp", "yahoo_auctions")
+ALL_CODES = ("ebay", "grailed", "mercari_jp", "yahoo_auctions", *CAROUSELL_COUNTRIES)
 
 
 def build_adapters(settings: Settings) -> dict[str, MarketplaceAdapter]:
@@ -16,6 +18,7 @@ def build_adapters(settings: Settings) -> dict[str, MarketplaceAdapter]:
         "grailed": GrailedAdapter(settings),
         "mercari_jp": MercariJPAdapter(),
         "yahoo_auctions": YahooAuctionsAdapter(),
+        **{code: CarousellAdapter(code) for code in CAROUSELL_COUNTRIES},
     }
 
 

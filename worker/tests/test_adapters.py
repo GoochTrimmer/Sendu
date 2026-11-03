@@ -1,5 +1,6 @@
 import base64
 import json
+from datetime import UTC, datetime
 from decimal import Decimal
 
 import httpx
@@ -149,3 +150,61 @@ def test_check_response_5xx_is_transient():
 
 def test_check_response_ok():
     check_response(EbayAdapter(Settings()), _resp(200))
+
+
+# --- Carousell -----------------------------------------------------------------------------
+
+def test_carousell_parse_verified_shape():
+    from sourcer.adapters.carousell import CarousellAdapter
+
+    page = CarousellAdapter("carousell_ph").parse(load_fixture("carousell_search.json"))
+    assert [x.external_id for x in page.listings] == ["1471993317", "1380444751", "1468672573"]  # id "0" skipped
+    assert page.next_cursor is None  # page 1 only
+    a, bumped, cheap = page.listings
+    assert a.marketplace == "carousell_ph" and a.currency == "PHP" and a.price == Decimal("1280")
+    assert a.seller_id == "25493233" and a.seller_name == "nextflip"
+    assert a.url == (
+        "https://www.carousell.ph/p/yohji-yamamoto-y-saccs-pour-homme-nylon-backpack-in-black-ysaccs-1471993317/"
+    )
+    assert len(a.image_urls) == 2 and a.image_urls[0].startswith("https://media.karousell.com/")
+    assert a.listed_at == a.sort_time == datetime.fromtimestamp(1793702920, tz=UTC)
+    # Bumped cards: the bump time orders the results; the real listing time is unknown.
+    assert bumped.listed_at is None and bumped.sort_time == datetime.fromtimestamp(1793694132, tz=UTC)
+    assert cheap.price == Decimal("450.50") and cheap.image_urls[0].endswith("p1468672573_thumbnail.jpg")
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [("PHP 1,280", "1280"), ("RM39.90", "39.90"), ("Rp 110,700", "110700"), ("S$110", "110"),
+     ("HK$1,080", "1080"), ("", None), (None, None), ("Free", None)],
+)
+def test_carousell_price_formats(text, expected):
+    from sourcer.adapters.carousell import parse_price
+
+    assert parse_price(text) == (Decimal(expected) if expected else None)
+
+
+def test_carousell_countries_and_urls():
+    from sourcer.adapters.carousell import CarousellAdapter
+
+    my = CarousellAdapter("carousell_my")
+    assert my.country.currency == "MYR"
+    assert my.search_url("yohji yamamoto") == "https://www.carousell.com.my/search/yohji%20yamamoto"
+    assert CarousellAdapter("carousell_id").country.host == "id.carousell.com"
+
+
+def test_carousell_parse_html_and_block_detection():
+    from sourcer.adapters.carousell import CarousellAdapter, CarousellParseError
+
+    ad = CarousellAdapter("carousell_hk")
+    state = json.dumps(load_fixture("carousell_search.json"))
+    html = f'<html><script type="application/json">{{"other":1}}</script><script type="application/json">{state}</script></html>'
+    page = ad.parse_html(html)
+    assert len(page.listings) == 3 and page.listings[0].url.startswith("https://www.carousell.com.hk/p/")
+    assert page.listings[0].currency == "HKD"
+
+    req = httpx.Request("GET", "https://www.carousell.com.hk/search/x")
+    assert not ad.is_blocked_response(httpx.Response(200, text=html, request=req))
+    assert ad.is_blocked_response(httpx.Response(200, text="<html>Just a moment...</html>", request=req))
+    with pytest.raises(CarousellParseError):
+        ad.parse_html("<html>Just a moment...</html>")
