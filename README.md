@@ -43,7 +43,7 @@ This README is the build spec. It is written to be handed to Claude Code (or any
 | Part | Tech |
 |---|---|
 | Web | Next.js (App Router, TypeScript), Tailwind CSS, `@supabase/ssr` |
-| Database / auth | Supabase (Postgres, magic-link auth, Row Level Security) |
+| Database / auth | Supabase (Postgres, email + password auth, Row Level Security) |
 | Worker | Python 3.12, `httpx` (async), `pydantic`, `supabase-py` (or `psycopg` directly), `selectolax` for HTML parsing if needed |
 | Scheduler | GitHub Actions `schedule` |
 | Notifications | Telegram Bot API |
@@ -352,7 +352,7 @@ Enable RLS on every table. The worker uses the **service-role key** and bypasses
 | `blocked_sellers` | read shared rows + their own personal rows; insert personal (owner = self) or shared; delete shared rows they created and their own personal rows |
 | `seen_listings` | no access |
 
-**Invite-only:** disable public sign-ups in Supabase Auth and invite users from the dashboard (magic-link email). Create the `profiles` row with a trigger on `auth.users` insert.
+**Invite-only:** disable public sign-ups in Supabase Auth and create users from the dashboard with an email and password (no emails are sent). Create the `profiles` row with a trigger on `auth.users` insert.
 
 ---
 
@@ -478,7 +478,7 @@ Simple, mobile-friendly (most use will be on phones), dark mode supported.
 
 | Route | Purpose |
 |---|---|
-| `/login` | Magic-link sign-in |
+| `/login` | Email + password sign-in (change password in Settings) |
 | `/` (Feed) | New matches across all of the user's searches, newest first. Filters: search, group, marketplace, "hide initial results". Each card: image, title, price, size, marketplace, seller, time listed, which search matched, badges (price drop, bumped). Actions: **Like**, **Dismiss**, **Block seller** (choose personal or shared), **Open listing**. Clicking a card marks it seen. |
 | `/searches` | Saved searches grouped by `group_name`. Per search: status (active/paused), priority, marketplaces, last polled, 7-day matches and likes, last-run filter counts (spam/blocked/excluded). Create / edit / duplicate / pause / delete. |
 | `/searches/new`, `/searches/[id]` | Form: title, query, marketplaces (checkboxes), per-marketplace query override, include terms, exclude terms + **exclude toggle** (with per-marketplace override), **spam filter toggle**, price range + currency, sizes, priority, group. Comma or newline-separated term entry. |
@@ -531,8 +531,9 @@ Use Supabase server-side auth in the App Router. All data access goes through RL
 1. Create a project at supabase.com (free tier). Pick the Singapore region.
 2. **SQL Editor → New query**: paste all of `supabase/migrations/0001_init.sql` and run it. (Or `supabase db push` with the CLI.)
 3. **Authentication → Sign In / Providers → Email**: keep Email enabled and **turn off "Allow new users to sign up"**.
-4. **Authentication → URL Configuration**: set *Site URL* to your Vercel URL and add `http://localhost:3000/**` and `https://<your-app>.vercel.app/**` to *Redirect URLs*.
-5. **Authentication → Users → Invite user** for each friend. Their `profiles` row is created by a trigger.
+4. **Authentication → Sign In / Providers**: keep *Email* enabled, turn **off** *Allow new users to sign up*.
+5. **Authentication → Users → Add user → Create new user** for each friend: email + a starting password, tick *Auto Confirm User*. Their `profiles` row is created by a trigger; they can change the password in Settings. To reset a forgotten password, run in the SQL editor:
+   `update auth.users set encrypted_password = extensions.crypt('NEW-PASSWORD', extensions.gen_salt('bf')) where email = 'friend@example.com';`
 6. Make yourself admin: `update profiles set is_admin = true where id = (select id from auth.users where email = 'you@…');`
 7. **Project Settings → API**: copy the Project URL, the `anon` key (web) and the `service_role` key (worker only).
 
@@ -556,7 +557,7 @@ Use Supabase server-side auth in the App Router. All data access goes through RL
 ### 5. Vercel
 1. Import the repo, set **Root Directory = `web`**.
 2. Env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME`. **Never** the service-role key.
-3. Deploy, then put the URL into Supabase's Site URL / Redirect URLs (step 1.4).
+3. Deploy (`npx vercel deploy --prod` from the repo root).
 
 Local web dev: `cd web && cp .env.example .env.local` (fill in) → `npm install` → `npm run dev`.
 
