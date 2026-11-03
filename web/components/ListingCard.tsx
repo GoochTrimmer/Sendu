@@ -1,5 +1,5 @@
 import { blockSeller, dismissMatches, toggleLike } from "@/app/actions";
-import { formatPrice, marketplaceName, timeAgo } from "@/lib/format";
+import { formatPrice, formatSgd, marketplaceName, timeAgo } from "@/lib/format";
 import type { Listing } from "@/lib/types";
 
 export interface CardProps {
@@ -10,9 +10,12 @@ export interface CardProps {
   searchTitles?: string[];
   isInitial?: boolean;
   isNew?: boolean;
+  /** Live SGD-per-unit rates, for the "≈ S$" hint next to foreign prices. */
+  rates?: Record<string, number>;
 }
 
-export function ListingCard({ listing, liked, matchIds = [], searchTitles = [], isInitial, isNew }: CardProps) {
+export function ListingCard({ listing, liked, matchIds = [], searchTitles = [], isInitial, isNew, rates }: CardProps) {
+  const sgd = formatSgd(listing.price, listing.currency, rates);
   const img = listing.image_urls[0];
   const openHref = matchIds.length ? `/go/${matchIds[0]}` : listing.url;
   const dropped =
@@ -54,11 +57,12 @@ export function ListingCard({ listing, liked, matchIds = [], searchTitles = [], 
         <a href={openHref} target="_blank" rel="noopener noreferrer" className="line-clamp-2 text-sm font-medium leading-snug hover:underline">
           {listing.title}
         </a>
-        <div className="flex items-baseline gap-1.5">
+        <div className="flex flex-wrap items-baseline gap-x-1.5">
           <span className="text-sm font-bold">{formatPrice(listing.price, listing.currency)}</span>
           {dropped != null && dropped > 0 && (
             <span className="text-xs text-muted line-through">{formatPrice(listing.previous_price, listing.currency)}</span>
           )}
+          {sgd && <span className="text-xs text-muted">{sgd}</span>}
           {listing.size && <span className="text-xs text-muted">· {listing.size}</span>}
         </div>
         <p className="truncate text-xs text-muted">

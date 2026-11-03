@@ -7,7 +7,7 @@ export function marketplaceName(code: string): string {
 export function formatPrice(price: number | null, currency: string | null): string {
   if (price == null) return "—";
   const cur = currency ?? "";
-  const digits = cur === "JPY" || cur === "KRW" ? 0 : price % 1 === 0 ? 0 : 2;
+  const digits = cur === "JPY" || cur === "KRW" || cur === "IDR" ? 0 : price % 1 === 0 ? 0 : 2;
   try {
     return new Intl.NumberFormat("en", {
       style: currency ? "currency" : "decimal",
@@ -18,6 +18,19 @@ export function formatPrice(price: number | null, currency: string | null): stri
   } catch {
     return `${price} ${cur}`.trim();
   }
+}
+
+/** "≈ S$25.84" for non-SGD prices when a live rate is known, else null. */
+export function formatSgd(
+  price: number | null,
+  currency: string | null,
+  rates: Record<string, number> | undefined,
+): string | null {
+  if (price == null || !currency || currency === "SGD" || !rates) return null;
+  const rate = rates[currency];
+  if (!rate) return null;
+  const sgd = price * rate;
+  return `≈ S$${sgd.toLocaleString("en", { minimumFractionDigits: sgd < 100 ? 2 : 0, maximumFractionDigits: sgd < 100 ? 2 : 0 })}`;
 }
 
 export function timeAgo(iso: string | null | undefined, now = Date.now()): string {

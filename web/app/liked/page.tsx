@@ -1,15 +1,19 @@
 import { ListingCard } from "@/components/ListingCard";
 import { requireUser } from "@/lib/auth";
+import { loadFxRates } from "@/lib/fx";
 import type { Listing } from "@/lib/types";
 
 export default async function LikedPage() {
   const { supabase, userId } = await requireUser();
-  const { data, error } = await supabase
-    .from("listing_feedback")
-    .select("created_at,listing:listings!inner(*)")
-    .eq("user_id", userId)
-    .eq("feedback", "like")
-    .order("created_at", { ascending: false });
+  const [{ data, error }, rates] = await Promise.all([
+    supabase
+      .from("listing_feedback")
+      .select("created_at,listing:listings!inner(*)")
+      .eq("user_id", userId)
+      .eq("feedback", "like")
+      .order("created_at", { ascending: false }),
+    loadFxRates(supabase),
+  ]);
 
   const rows = (data ?? []) as unknown as { listing: Listing }[];
   return (
@@ -23,7 +27,7 @@ export default async function LikedPage() {
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {rows.map(({ listing }) => (
-            <ListingCard key={listing.id} listing={listing} liked />
+            <ListingCard key={listing.id} listing={listing} liked rates={rates} />
           ))}
         </div>
       )}

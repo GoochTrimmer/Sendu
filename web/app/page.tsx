@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { FilterBar } from "@/components/FilterBar";
 import { ListingCard } from "@/components/ListingCard";
 import { requireUser } from "@/lib/auth";
+import { loadFxRates } from "@/lib/fx";
 import type { BlockedSellerRow, MatchRow } from "@/lib/types";
 
 const LIMIT = 150;
@@ -26,12 +27,13 @@ export default async function FeedPage(props: PageProps<"/">) {
   if (one("mp")) q = q.eq("listing.marketplace", one("mp"));
   if (one("initial") !== "show") q = q.eq("is_initial", false);
 
-  const [{ data: matchData, error }, { data: searches }, { data: likes }, { data: blocked }] =
+  const [{ data: matchData, error }, { data: searches }, { data: likes }, { data: blocked }, rates] =
     await Promise.all([
       q,
       supabase.from("saved_searches").select("id,title,group_name").eq("user_id", userId).order("title"),
       supabase.from("listing_feedback").select("listing_id").eq("user_id", userId).eq("feedback", "like"),
       supabase.from("blocked_sellers").select("marketplace,seller_id,seller_name"),
+      loadFxRates(supabase),
     ]);
 
   const liked = new Set((likes ?? []).map((l) => l.listing_id as string));
@@ -82,6 +84,7 @@ export default async function FeedPage(props: PageProps<"/">) {
               searchTitles={titles}
               isInitial={m.is_initial}
               isNew={m.state === "new" && !m.is_initial}
+              rates={rates}
             />
           ))}
         </div>
