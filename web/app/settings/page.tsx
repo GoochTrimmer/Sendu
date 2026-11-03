@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { signOut } from "@/app/login/actions";
 import { requireUser } from "@/lib/auth";
 import type { Profile } from "@/lib/types";
@@ -66,6 +67,13 @@ export default async function SettingsPage() {
         <form action={generateLinkCode}>
           <button className="btn">{profile?.telegram_chat_id ? "Re-link Telegram" : "Generate link code"}</button>
         </form>
+      </section>
+
+      <section className="card space-y-3 p-4">
+        <h2 className="text-sm font-semibold">Password</h2>
+        <Link href="/set-password" className="btn">
+          Change password
+        </Link>
       </section>
 
       <form action={signOut}>
