@@ -42,7 +42,10 @@ export async function sendPasswordLink(_: LoginState, formData: FormData): Promi
   if (!exists) return { status: "error", message: "This email hasn't been invited yet." };
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${await siteOrigin()}/auth/callback?next=/set-password`,
+    // The Reset Password email template appends ?token_hash=…&type=recovery to this,
+    // so the link returns to whichever site asked (localhost or production).
+    // The callback sends recovery links on to /set-password.
+    redirectTo: `${await siteOrigin()}/auth/callback`,
   });
   if (error) {
     return {
